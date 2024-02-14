@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Muse - Music Player</title>
+    <script src="https://kit.fontawesome.com/07d6d91e90.js" crossorigin="anonymous"></script>
+    
+    <style>
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family:  Arial, Helvetica, sans-serif;
+            background-color: #29263f;
+        }
+        footer {
+            padding-block: 10px;
+            position: fixed;
+            bottom: 0;
+            background-color: #1B1D2B;
+            width: 100vw;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .song-profile  {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+        }
+        .song-profile #song-details {
+            color: white;
+        }
+        .song-profile img{
+            height: 50px;
+            margin: 15px 10px 15px 40px;
+        }
+        #song-details span:nth-child(1){
+            display: block;
+            color: #aba9b0;
+            font-size: 15px;
+        }
+        #song-details span:nth-child(2){
+            color: #7F79A1;
+            display: block;
+            font-size: 15px;
+        }
+        #song-view{
+            margin-left: 50px;
+            color: #7F79A1;
+            font-size: 10px;
+        }
+        #music-player{
+            display: flex;
+            flex-direction: row;
+            align-items: baseline;
+            justify-content: space-evenly;
+            width: 50vw;
+        }
+        #music-player i,#music-player time{
+            color:white;
+            margin-inline: 5px;
+
+        }
+        #music-player time{
+            color: #7F79A1;
+        }
+        #music-player input[type="range"]{
+            width: 30vw;
+        }
+        input[type="range"]::-webkit-slider-runnable-track{
+            width: 100%;
+            background-color: white;
+            height: 8.4px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        input[type=range]::-webkit-slider-thumb{
+            margin-top: -4px;
+            border: 5px solid white;
+            box-shadow: -2px 1px 8px #000000, calc(-100vw -7px) 0 0 100vw #7F79A1;
+            
+        }
+        #music-player #wishlist i.fa-solid{
+            color: red;
+        }
+        #music-player #wishlist i.fa-regular{
+            color: white;
+        }
+        #volume-countrols{
+            margin-right: 40px;
+
+        }
+        #volume-countrols i{
+            color: #7F79A1;
+            margin-right: 10px;
+
+        }
+        main{
+            display: flex;
+            flex-direction: row;
+        }
+        main>nav {
+            background-color: #2f2b45;
+            color:#7f79a1;
+            width: 20vw;
+        }
+        nav .menu-list{
+            margin-block: 20px;
+            margin-inline-start: 65px;
+        }
+        h5{
+            font-size: 14px;
+            color: #7f79a1;
+            font-weight: normal;
+        }
+        .menu-list li{
+            list-style-type: none;
+            font-size: 18px;
+            padding-block: 5px;
+            margin-left: 50px;
+        }
+        .menu-list li>i {
+            position: absolute;
+            transform: translateX(-50%);
+            margin-inline-start: -35px;
+        
+        }
+        nav img{
+            height: 40px;
+            margin: 10px 50px;
+        }
+        nav button{
+            margin-top: 10px;
+            background-color: transparent;
+            border: 2px dashed white;
+            border-radius: 40px;
+            color: white;
+            font-size: 15px;
+            padding: 10px 20px;
+        }
+        nav button i {
+            padding-right: 5px;
+        }
+        .menu-list li.active {
+            background-image: linear-gradient(90deg,#ffffff4e ,#ffffff00);
+            color: white;
+            margin-left: -10px;
+            padding-left: 60px;
+            border-right: 5px solid white;
+        }
+       
+       main>section#music-container {
+        background-color: #29263f;
+        width: 80vw;
+       }
+       #music-container header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        border-bottom: 1px solid #7F79A1;
+       }
+       #music-container nav {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        color: white;
+       }
+       #music-container nav li{
+        list-style-type: none;
+        display: block;
+        padding: 30px 20px;
+    
+       }
+       #music-container nav li.active{
+        font-weight: bold;
+        color: white;
+        border-bottom: 4px solid white;
+       }
+       img[src="./assect/user-avatar.png"] {
+        height: 70px;
+       }
+       #music-container header>div#user-area{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+       }
+       #user-info {
+        text-align:  right;
+        color: white;
+
+       }
+       #user-dropdown button{
+        background-color: transparent;
+        color: #7f79a1;
+        border: none;
+       }
+       #user-dropdown i{
+        color: #7f79a1;
+       }
+       #user-dropdown{
+        position: relative;
+       }
+       #user-dropdown #dropdown-content {
+        display: none;
+        position: abso;
+       }
+       #user-dropdown:hover #dropdown-content{
+        display: block;
+       }
+       #user-dropdown #dropdown-content a{
+        display: block;
+        color: white;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 10px 20px;
+        border-radius: 10px;
+       }
+       #dropdown-content a:hover{
+        background-color: #635d86;
+        box-shadow: 0px 0px 4pc 4px #433f5a;
+       }
+       body>main {
+        height: 88vh;
+       }
+       #music-container main aside{
+        position: absolute;
+        right: 0;
+        border: left 1px solid #7f79a1; 
+        overflow-y: scroll;
+        height: 75vh;
+       }
+       h4{
+        margin-left: 30px;
+        font-weight: bold;
+        color: white;
+        font-size: 20px;
+    }
+    #music-container main aside::-webkit-scrollbar{
+        width: 10px;
+    }
+    #music-container main aside::-webkit-scrollbar-track{
+        border-radius: 10px;
+    }
+     #music-container main aside::-webkit-scrollbar-thumb{
+        background-color: #7873a7;
+        border-radius: 10pc;
+    }
+    .song-item{
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        z-index: 2;
+    }
+    aside .song-item img{
+        margin: 10px 20px;
+    }
+    .song-item #play-underlay{
+        display: inline-block;
+        background-color: #7f79a1;
+        border-radius: 50%;
+        margin-inline-start: 30px;
+        margin-inline-end: 10px;
+        padding: 15px;
+    }
+    #music-area{
+        width: 57vw;
+        overflow-y: scroll;
+        height: 76vh;
+    }
+    #music-area::-webkit-scrollbar {
+            width: 10px;
+        }
+        #music-area::-webkit-scrollbar-track {
+            border-radius: 10px;
+        }
+        #music-area::-webkit-scrollbar-thumb {
+            background-color: #7873a7;
+            border-radius: 10px;
+        }
+        #music-area #hero {
+            margin: 20px;
+            background-color: #9a91e5;
+            background-image: linear-gradient(320deg, #9a91e5, #2f2b45);
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            height: 50vh;
+            border-radius: 30px;
+        }
+        #music-area #hero-image img {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 55vh;
+        }
+        #hero-action {
+            color: white;
+            margin-left: 30px;
+        }
+        #hero-action h1 {
+            margin-block: 25px;
+            font-weight: bolder;
+            font-size: 40px;
+        }
+        #hero-action h2 {
+            margin-block: 25px;
+            margin-top:60px ;
+            font-size: 30px;
+            font-weight: 200;
+        }
+        #hero-action h3 {
+            font-weight: normal;
+        }
+        #hero-action #cta {
+            margin-top: 50px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+        }
+        #hero-action #cta-button {
+            color: black;
+            background-color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 15px 25px;
+            font-weight: bold;
+            font-size: 15px;
+        }
+        #hero-action #cta-icon-underlay {
+            border: 2px solid white;
+            margin-inline: 20px ;
+            border-radius: 50%;
+        }
+        #hero-action #cta-icon-underlay i {
+            padding: 20px;
+        }
+        #hero-action #cta-comment {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #top-artists, #new-hits {
+            margin: 25px;
+        }
+        #top-artists header, #new-hits header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-block: 25px ;
+        }
+        #top-artists header h4,#new-hits header h4 {
+            margin: 0px;
+        }
+        #top-artists #song-list,#new-hits #song-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+        #top-artists .song-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #top-artists .song-item img {
+            height: 180px;
+        }
+        #new-hits .song-item img {
+            height: 120px;
+        }
+        #top-artists .song-item #song-details {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }  
+
+
+    </style>
+</head>
+<body>
+    <main>
+        <nav>
+            <img src="./assect/logo.png" alt="muse-logo" />
+            <div id="menu-categories-1" class="menu-list">
+                <h5>MENU</h5>
+                <li><i class="fa-solid fa-music"></i>Explore</li>
+                <li class="active"><i class="fa-brands fa-soundcloud"></i>Genres</li>
+                <li><i class="fa-solid fa-microphone"></i>Artists</li>
+                <li><i class="fa-solid fa-compact-disc"></i>Albums</li>
+            </div>
+            <div id="menu-categories-2"  class="menu-list">
+                <h5>LIBRARY</h5>
+                <li><i class="fa-solid fa-clock"></i>Recent</li>
+                <li><i class="fa-solid fa-compact-disc"></i>Albums</li>
+                <li><i class="fa-solid fa-heart"></i>Favourites</li>
+            </div>
+            <div id="menu-categories-3"  class="menu-list">
+                <h5>PLAYLIST</h5>
+                <li><i class="fa-solid fa-circle-play"></i>Good vibes</li>
+                <li><i class="fa-solid fa-circle-play"></i>Best Jazz</li>
+                <li><i class="fa-solid fa-circle-play"></i>Party</li>
+                <button><i class="fa-solid fa-add"></i>Add playlist</button>
+            </div>
+        </nav>
+        <section id="music-container">
+            <header>
+                <nav>
+                    <li>Home</li>
+                    <li>Pools</li>
+                    <li>NFTs</li>
+                    <li>Launchpad</li>
+                    <li>Work with us</li>
+                </nav>
+                <div id="user-area" >
+                    <div id="user-info">
+                        <div id="username">Jerome</div>
+                        <div id="user-dropdown">
+                            <button id="dropdown-btn">sfw4334ger3r</button>
+                            <i class="fa-solid fa-caret-down"></i>
+                            <div id="dropdown-content">
+                                <a href="">Profile</a>
+                                <a href="">Settings</a>
+                                <a href="">Notifications</a>
+                                <a href="">Logout</a>
+                            </div>
+                        </div>
+
+                    </div>
+                    <img src="./assect/user-avatar.png" />
+                </div>
+            </header>
+            <main>
+                <section id="music-area">
+                    <section id="hero">
+                        <div id="hero-action">
+                            <H2>Trending New Hits</H2>
+                            <h1>Break My Heart</h1>
+                            <h3>Dua Lipa</h3>
+                            <div id="cta">
+                                <button id="cta-button">Listen Now</button>
+                                <div id="cta-icon-underlay">
+                                    <i class="fa-solid fa-heart"></i>
+                                </div>
+                                <div id="cta-comment">
+                                    <span>+30% APR</span>
+                                    <span>33M streams</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="hero-image">
+                            <img src="./assect/hero-img.png" />
+                        </div>
+                    </section>
+                    <section id="top-artists">
+                        <header>
+                            <h4>Top Artists</h4>
+                            <a href="#">See all</a>
+                        </header>
+                        <div id="song-list">
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <section id="new-hits">
+                        <header>
+                            <h4>New Hits</h4>
+                            <a href="#">See all</a>
+                        </header>
+                        <div id="song-list">
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                            <div class="song-item">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Artist Name</span>
+                                    <span>44M views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+                <aside>
+                    <h4>Hot Boosts</h4>
+                    <div id=" song-list">
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <div id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <div id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <div id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <div id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <div id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <span id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </span>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <span id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </span>
+                        </div>
+                        <div class="song-item">
+                            <div class="song-profile">
+                                <img src="./assect/song-label.jpeg" id="song-profile-image" />
+                                <div id="song-details">
+                                    <span>Song Name</span>
+                                    <span>Artist Name</span>
+                                </div>
+                                <div id="song-views">30% APR</div>
+                            </div>
+                            <span id="play-underlay">
+                                <i class="fa-solid fa-play"></i>
+                            </span>
+                        </div>
+                    </div>
+                </aside>
+            </main>
+        </section>
+    </main>
+
+    <footer>
+        <div class="song-profile">
+            <img src="./assect/song-label.jpeg" id="song-profile-image" />
+            <div id="song-details">
+                <span>Song Name</span>
+                <span>Artist Name</span>
+            </div>
+            <div id="song-views">30% APR</div>
+        </div>
+        <div id="music-player">
+            <div id="music-controls">
+                <i class="fa-solid fa-backward-step"></i>
+                <i class="fa-solid fa-play"></i>
+                <i class="fa-solid fa-pause"></i>
+                <i class="fa-solid fa-forward-step"></i>
+            </div>
+            <div id="song-status">
+                <input type="range" max="1000" min="0" value="70" />
+                <time>00:35</time>
+            </div>
+            <div id="wishlist">
+                <i class="fa-solid fa-heart"></i>
+                <i class="fa-regular fa-heart"></i>
+
+            </div>
+        </div>
+        <div id="volume-controls">
+            <i class="fa-solid fa-volume-high"></i>
+            <input type="range" max="100" min="0" value="70" />
+        </div>
+    </footer>
+</body>
+</html>
